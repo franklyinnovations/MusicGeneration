@@ -8,13 +8,11 @@ def create_piano_sets():
 	piano_raw_path = 'JayZhou_piano_sets/'
 	piano_left = []
 	piano_right = []
-	left = []
-	right = []
 
+	print('Processing music files...')
 	for file_name in os.listdir(piano_raw_path):
 		if file_name.endswith('.mid'):
 			s = converter.parse(piano_raw_path + file_name)
-
 			#for part in s.parts:
 				#for n in part.notes:
 					#print(n, n.offset, n.pitch.diatonicNoteNum)
@@ -23,8 +21,8 @@ def create_piano_sets():
 
 					#if n.isChord:
 						#print(n.pitches[0].diatonicNoteNum)
-			left.clear()
-			right.clear()
+			left = []
+			right = []
 
 
 			for el in s.parts[1].recurse():
@@ -46,7 +44,8 @@ def create_piano_sets():
 
 	return piano_left, piano_right
 
-def create_train_sequence(note_sequence, sequence_length=8, repetition_step=2, note_dict=None):
+def create_train_sequence(note_sequence, sequence_length=8, repetition_step=1, note_dict=None):
+	print('Producing training sequences...')
 	if note_dict is None:
 		note_dict = create_note_dictionary(note_sequence)
 
