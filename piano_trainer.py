@@ -1,7 +1,9 @@
 import tflearn
+import tensorflow as tf
 from create_data_sets import *
 
 def train_piano_melody(right, sequence_length=8, temperature=1.0, epochs=5):
+	tf.reset_default_graph()
 	piano_melody = []
 	for sequence in right:
 		piano_melody.extend(sequence)
@@ -25,17 +27,18 @@ def train_piano_melody(right, sequence_length=8, temperature=1.0, epochs=5):
 	melody_generator = tflearn.SequenceGenerator(melody_trainer, 
 						dictionary=melody_dict, seq_maxlen=sequence_length, clip_gradients=5.0)
 	melody_generator.fit(train_melody_X, train_melody_Y, 
-							validation_set=0.1, batch_size=32, n_epoch=epochs)
+							validation_set=0.1, batch_size=32, n_epoch=epochs, run_id='melody')
 
 	return melody_generator.generate(30, temperature=temperature, seq_seed=melody_seed)
 
 def train_piano_accompany(left, sequence_length=8, temperature=1.0, epochs=5):
-	pinao_accompany = []
+	tf.reset_default_graph()
+	piano_accompany = []
 	for sequence in left:
-		pinao_accompany.extend(sequence)
+		piano_accompany.extend(sequence)
 
-	train_accompany_X, train_accompany_Y, accompany_dict = create_train_sequence(pinao_accompany)
-	accompany_seed = random_sample_note_sequence(pinao_accompany, sequence_length)
+	train_accompany_X, train_accompany_Y, accompany_dict = create_train_sequence(piano_accompany)
+	accompany_seed = random_sample_note_sequence(piano_accompany, sequence_length)
 
 	print('Training accompany...')
 	accompany_trainer = tflearn.input_data([None, sequence_length, len(accompany_dict)])
@@ -51,6 +54,6 @@ def train_piano_accompany(left, sequence_length=8, temperature=1.0, epochs=5):
 	accompany_generator = tflearn.SequenceGenerator(accompany_trainer, 
 						dictionary=accompany_dict, seq_maxlen=sequence_length, clip_gradients=5.0)
 	accompany_generator.fit(train_accompany_X, train_accompany_Y, 
-							validation_set=0.1, batch_size=32, n_epoch=epochs)
+							validation_set=0.1, batch_size=32, n_epoch=epochs, run_id='accompany')
 	return accompany_generator.generate(30, temperature=temperature, seq_seed=accompany_seed)
 	
