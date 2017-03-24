@@ -11,7 +11,7 @@ def train_piano_melody(right, sequence_length=8, temperature=1.0, epochs=5):
 	train_melody_X, train_melody_Y, melody_dict = create_train_sequence(piano_melody)
 
 	melody_seed = random_sample_note_sequence(piano_melody, sequence_length)
-	melody_seed = [45, 46, 48, 49]
+	#melody_seed = [45, 46, 48, 49]
 
 	print('Training melody...')
 	melody_trainer = tflearn.input_data([None, sequence_length, len(melody_dict)])
@@ -29,7 +29,7 @@ def train_piano_melody(right, sequence_length=8, temperature=1.0, epochs=5):
 	melody_generator.fit(train_melody_X, train_melody_Y, 
 							validation_set=0.1, batch_size=32, n_epoch=epochs, run_id='melody')
 
-	return melody_generator.generate(30, temperature=temperature, seq_seed=melody_seed)
+	return melody_generator.generate(100, temperature=temperature, seq_seed=melody_seed)
 
 def train_piano_accompany(left, sequence_length=8, temperature=1.0, epochs=5):
 	tf.reset_default_graph()
@@ -55,5 +55,5 @@ def train_piano_accompany(left, sequence_length=8, temperature=1.0, epochs=5):
 						dictionary=accompany_dict, seq_maxlen=sequence_length, clip_gradients=5.0)
 	accompany_generator.fit(train_accompany_X, train_accompany_Y, 
 							validation_set=0.1, batch_size=32, n_epoch=epochs, run_id='accompany')
-	return accompany_generator.generate(30, temperature=temperature, seq_seed=accompany_seed)
+	return accompany_generator.generate(100, temperature=temperature, seq_seed=accompany_seed)
 	

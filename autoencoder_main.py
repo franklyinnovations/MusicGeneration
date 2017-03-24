@@ -6,11 +6,9 @@ from autoencoder import *
 
 def main():
 	left, right = create_piano_sets()
-	#melody = train_piano_melody(right, sequence_length=8, temperature=1.0, epochs=20)
-	#accompany = train_piano_accompany(left, sequence_length=8, temperature=1.0, epochs=20)
-	#generate_piano_midi(accompany, melody)
 	melodies = autoencoder_melody(right, 20)
-	generate_piano_midi([], melodies[0][0])
+	accompanies = autoencoder_accompany(left, 20)
+	generate_piano_midi(accompanies[0][0], melodies[0][0])
 
 if __name__ == '__main__':
 	main()
